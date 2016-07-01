@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <title>Can You Survive a Million Years</title>
     <script src="fabric.min.js"></script>
     <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Architects+Daughter|Bungee|Indie+Flower" rel="stylesheet">
@@ -71,6 +72,17 @@
     #popup * {
       text-align: center;
       font-family: 'Indie Flower'
+    }
+
+    #yearselapsed {
+      position: absolute;
+      left: 150px;
+      top: 50px;
+      font-size: 18pt;
+      color: white;
+      font-family: 'bungee';
+      text-shadow: 2px 2px 2px black;
+      line-height: 30px;
     }
 
     #overlay {
@@ -359,6 +371,7 @@
         $('#darwinsays').hide();
         $('#popup').hide();
         $('#overlay').hide();
+        $('#yearselapsed').hide();
 
         canvas.setBackgroundImage('graphics/bg2.jpg',function(){
             //generateDummySpecies();
@@ -390,6 +403,7 @@
             $('#play').click(function(){
               if(nselected >= 3){
                 $("#configmenu").hide();
+                $('#yearselapsed').show();
                 canvas.remove(text);
                 for(i=0; i<choicepopulation.length; i++){
                     canvas.remove(choicepopulation[i].specie);
@@ -421,7 +435,8 @@
 
       function generateSpecie() {
         //initial population
-
+        canvas.setBackgroundImage('graphics/bg6.jpg');
+        canvas.renderAll.bind(canvas);
         $('.speechbubble').html("Look! They're getting many! <br><br> It is a natural trait of species to reproduce offspring. Now, when they reproduce, they pass on their best traits on their offspring. <br><br> This is a key to their survival as they experience changes in their environment.  ");
 
           for(i=0; i<population.length; i++){
@@ -440,7 +455,7 @@
       }else{
         year += 30000;
       }
-        console.log(year);
+        $('#yearselapsed').html("Years Elapsed: <br>"+year+" years");
         if(population.length == 0){
           $('#subh').html('Sorry :(');
           $('#hdr').html('Your Specie did not live long enough to survive a million years.');
@@ -467,7 +482,7 @@
 
             oImg.animate({'scaleX': 1.2, 'scaleY': 1.2},{
               onChange: canvas.renderAll.bind(canvas),
-              duration: 10000,
+              duration: 14000,
               easing: fabric.util.ease.easeOutElastic,
               onComplete: function() { canvas.remove(oImg); }
             })
@@ -486,7 +501,7 @@
 
             oImg.animate({    'left':600,'scaleX': 1.2, 'scaleY': 1.2},{
               onChange: canvas.renderAll.bind(canvas),
-              duration: 20000,
+              duration: 15000,
               easing: fabric.util.ease.easeOutElastic,
               onComplete: function() { canvas.remove(oImg); }
             });
@@ -560,7 +575,7 @@
 
               randomizer = [population[parent1],population[parent2]];
 
-              temp = new Specie( randomizer[getRandomInt(0,2)].height, randomizer[getRandomInt(0,2)].covering, randomizer[getRandomInt(0,2)].feeding_type, randomizer[getRandomInt(0,2)].feet, getRandomInt(0,700),getRandomInt(100,500) );
+              temp = new Specie( randomizer[getRandomInt(0,2)].height, randomizer[getRandomInt(0,2)].covering, randomizer[getRandomInt(0,2)].feeding_type, randomizer[getRandomInt(0,2)].feet, getRandomInt(0,700),getRandomInt(150,500) );
               temp.render();
               canvas.renderAll.bind(canvas);
 
@@ -754,6 +769,7 @@
       <h1 id= "hdr"> Your Specie is a survivor! It can survive a million years! <h1>
         <button class="btn" id="restart">Restart the Game</button>
     </div>
+      <div id="yearselapsed">Years Elapsed: <br> 100 years</div>
     <div id="configmenu">
         <button id="play">Play</button>
         <button id="start">Start Game</button>
