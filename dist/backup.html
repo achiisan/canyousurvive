@@ -1,0 +1,663 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="fabric.min.js"></script>
+    <script   src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Bungee|Indie+Flower" rel="stylesheet">
+  </head>
+  <style>
+    .configmenu {
+      background: green;
+      width: 300px;
+      height: 500px;
+      position: absolute;
+      top: 10%;
+      left: 5%;
+    }
+
+    #start {
+      position: absolute;
+      left: 32%;
+      top: 70%;
+      background: rgb(72,135,249);
+      font-family: bungee;
+      border: none;
+      padding: 10px;
+      font-size: 20pt;
+      color: white;
+      box-shadow: 2px 2px 2px black;
+      border-radius : 20px;
+    }
+
+    #play {
+      position: absolute;
+      left: 36%;
+      font-family: bungee;
+      top: 80%;
+      background: rgb(72,135,249);
+      border: none;
+      padding: 10px;
+      font-size: 20pt;
+      color: white;
+      box-shadow: 2px 2px 2px black;
+      border-radius : 20px;
+    }
+
+    #darwinsays {
+      position: absolute;
+      background: green;
+      width: 200px;
+      height: 600px;
+    }
+    #main {
+
+      margin-left: 100px;
+    }
+  </style>
+  <body>
+    <canvas id="main" width="800" height="600" ></canvas>
+
+    <script>
+      // Global Variables
+
+      var canvas = new fabric.Canvas('main');
+      choicepopulation = [];
+      population = [];
+      nselected = 0;
+      calamity = 0;
+      year = 0
+      var timer;
+
+      //general characteristics
+      gen_height = 1;
+      gen_covering = 1;
+      gen_feeding_type = 1;
+      gen_feet = 1;
+
+      var text = new fabric.Text('Choose 3 species among the choices.', { left: 90, top: 50,  shadow: 'rgba(0,0,0,0.7) 5px 5px 5px', fontSize: 40, fill: 'white', fontFamily: 'Indie Flower',  });
+
+      class Specie {
+          constructor(height, covering, feeding_type, feet, x,y){
+            //parameters
+            this.height = height;
+            this.covering = covering;
+            this.feeding_type = feeding_type;
+            this.feet = feet;
+            this.x = x;
+            this.y = y;
+
+            //specie specification
+            this.bodywidth = 0; //height
+            this.bodyheight = 0;
+            this.bodyimg = "";
+            this.beakwidth = null; //feeeding_type
+            this.fill = 'red'; //covering
+            this.legheight = 0; //feet
+            //update parameters of a specie
+            this.updateParams = function() {
+
+                          switch(this.height){
+                            case 1:
+                            this.bodywidth = 50;
+                            this.bodyheight = 60;
+                            break;
+                            case 2:
+                            this.bodywidth = 50;
+                            this.bodyheight = 75;
+                            break;
+                            case 3:
+                            this.bodywidth = 50;
+                            this.bodyheight = 100;
+                            break;
+                          }
+
+                          switch(this.covering) {
+                            case 1:
+                              this.fill = 'red';
+                              break;
+                            case 2:
+                              this.fill = 'blue';
+                              break;
+                            case 3:
+                              this.fill = 'green';
+                              break;
+                            case 4:
+                              this.fill = 'yellow';
+                              break;
+                          }
+
+                          switch(this.feeding_type){
+                              case 1:
+                              this.beakwidth = 38;
+                              this.beakheight = 3;
+                              this.beakangle = 0;
+                              this.beakfill = 'black';
+                              this.beakleft = -128;
+                              this.beaktop = -40;
+                                break;
+                              case 2:
+                                this.beakwidth = 30;
+                                this.beakheight = 30;
+                                this.beakangle = 45;
+                                this.beakfill = 'yellow';
+                                this.beakleft = -110;
+                                this.beaktop = -60;
+                          }
+
+                          switch(this.feet){
+                            case 1:
+                              this.legheight = 50;
+                              break;
+                            case 2:
+                              this.legheight = 30;
+                              break;
+
+                          }
+            };
+
+            this.updateParams();
+
+
+
+            this.rect = new fabric.Ellipse({
+              left: 0,
+              top: 0,
+              fill: 'rgba(185,122,87,1)',
+              originX: 'center', originY: 'center',
+               rx: this.bodywidth,
+              ry: this.bodyheight,
+              angle: -45
+
+
+            });
+
+
+
+
+            this.head = new fabric.Ellipse({
+
+              fill: 'rgba(174,104,0,1)',
+              scaleY: 0.7,
+              left: 0-100,
+              top: 0-70,
+              originX: 'center', originY: 'center',
+              rx: 70,
+              ry: 90
+
+            });
+
+
+
+            this.beak = new fabric.Rect({
+              width: this.beakwidth,
+              height: this.beakheight,
+              fill: this.beakfill,
+              left: this.beakleft,
+              top: this.beaktop,
+              angle: this.beakangle
+            });
+
+            this.mouth = new fabric.Rect({
+              width: 35,
+              height: 3,
+              fill: 'black',
+              left: -128,
+              top: -40,
+              angle: 0
+            });
+
+
+             this.feet1 = new fabric.Rect({
+              left: 0,
+              top: 50,
+              fill: 'black',
+              width: 10,
+              height: this.legheight
+            });
+
+            this.feet2 = new fabric.Rect({
+              left: 20,
+              top: 50,
+              fill: 'black',
+              width: 10,
+              height: this.legheight
+            });
+
+
+            this.eye1 = new fabric.Ellipse({
+              fill: 'white',
+              originX: 'center', originY: 'center',
+              rx: 15,
+              ry: 18,
+              left: 0-130,
+              top: 0-90
+            })
+
+            this.eye2 = new fabric.Ellipse({
+              fill: 'white',
+              originX: 'center', originY: 'center',
+              rx: 15,
+              ry: 18,
+              left: 0-90,
+              top: 0-90
+            })
+
+            this.eyemini1 = new fabric.Ellipse({
+              fill: 'black',
+              originX: 'center', originY: 'center',
+              rx: 4,
+              ry: 6,
+              left: 0-135,
+              top: 0-90
+            })
+
+            this.eyemini2 = new fabric.Ellipse({
+              fill: 'black',
+              originX: 'center', originY: 'center',
+              rx: 4,
+              ry: 6,
+              left: 0-95,
+              top: 0-90
+            })
+
+            this.render = function(){
+              this.specie = new fabric.Group([this.feet1,this.feet2,this.rect, this.head,this.eye1,this.eye2,this.eyemini1, this.eyemini2,this.beak,this.mouth],{
+                left: this.x,
+                top: this.y
+              });
+
+              canvas.add(this.specie);
+              canvas.bringForward(this.head);
+              this.specie.animate({'scaleX':0.6,'scaleY':0.6}, {
+                onChange: canvas.renderAll.bind(canvas)
+              });
+              canvas.renderAll.bind(canvas);
+
+
+              this.specie.on("selected", function() {
+                if(nselected < 3){
+                  console.log(this.height);
+                  population.push(new Specie(height,covering,feeding_type,feet,100,100));
+                  this.animate({'top':10,'left':10, 'scaleX':0.2, 'scaleY':0.2}, {
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+                  nselected++;
+                }
+              });
+            }
+
+
+          }
+
+
+      }
+
+      //
+
+
+
+      //MAIN FUNCTION
+      window.onload = function() {
+        $('#start').hide();
+        $('#play').hide();
+        canvas.setBackgroundImage('graphics/bg2.jpg',function(){
+            //generateDummySpecies();
+            fabric.Image.fromURL('graphics/logo.png', function(oImg) {
+
+              canvas.add(oImg);
+
+              oImg.animate({    'left':100,'top': 200,'scaleX': 0.350, 'scaleY': 0.350},{
+                onChange: canvas.renderAll.bind(canvas),
+                duration: 8000,
+                easing: fabric.util.ease.easeOutCubic,
+                onComplete: function() {
+                    $('#start').show(1000);
+                }
+              });
+              $('#start').click(function() {
+                  $('#start').hide(1000);
+                  canvas.remove(oImg);
+                  $('#play').show(1000);
+                  generateDummySpecies();
+
+              });
+
+            });
+        });
+
+            $('#play').click(function(){
+              if(nselected >= 3){
+                $("#configmenu").hide();
+                canvas.remove(text);
+                for(i=0; i<choicepopulation.length; i++){
+                    canvas.remove(choicepopulation[i].specie);
+                    canvas.renderAll.bind(canvas);
+                }
+
+                generateSpecie();
+                timer = window.setInterval(testSpecie,2000);
+
+                }else{
+                    alert("Please select at least 3 species.")
+                }
+
+
+            });
+
+
+
+      }
+
+
+
+      function getRandomInt(min, max) {
+          return Math.floor(Math.random() * (max - min)) + min;
+      }
+
+      function generateSpecie() {
+        //initial population
+        canvas.setBackgroundImage('graphics/bg1.jpg');
+        canvas.renderAll.bind(canvas);
+
+
+          for(i=0; i<population.length; i++){
+              population[i].x = getRandomInt(0,700);
+              population[i].y = getRandomInt(300,500);
+              population[i].render();
+              console.log(population[i]);
+          }
+
+      }
+
+      function testSpecie() {
+        year += 50000;
+        console.log(year);
+        if(population.length == 0){
+            alert("You Lose!");
+            clearInterval(timer);
+            return;
+        }
+        if (year == 50000){
+          fabric.Image.fromURL('graphics/sun.png', function(oImg) {
+            oImg.set({
+              'left':600
+            });
+            canvas.add(oImg);
+
+            oImg.animate({'scaleX': 1.2, 'scaleY': 1.2},{
+              onChange: canvas.renderAll.bind(canvas),
+              duration: 6000,
+              easing: fabric.util.ease.easeOutElastic,
+              onComplete: function() { canvas.remove(oImg); }
+            })
+
+
+          });
+        }
+        else if(year == 200000){
+          calamity++;
+
+          canvas.setBackgroundImage('graphics/bg3.jpg');
+          fabric.Image.fromURL('graphics/moon.png', function(oImg) {
+
+            canvas.add(oImg);
+
+            oImg.animate({    'left':600,'scaleX': 1.2, 'scaleY': 1.2},{
+              onChange: canvas.renderAll.bind(canvas),
+              duration: 12000,
+              easing: fabric.util.ease.easeOutElastic,
+              onComplete: function() { canvas.remove(oImg); }
+            });
+          });
+
+          canvas.renderAll.bind(canvas);
+        }else if(year == 500000){
+          calamity++;
+          canvas.setBackgroundImage('graphics/bg4.jpg');
+
+          fabric.Image.fromURL('graphics/sun.png', function(oImg) {
+
+            canvas.add(oImg);
+
+            oImg.animate({    'left':300,'scaleX': 0.7, 'scaleY': 0.7},{
+              onChange: canvas.renderAll.bind(canvas),
+              duration: 8000,
+              easing: fabric.util.ease.easeOutElastic,
+              onComplete: function() { canvas.remove(oImg); }
+            });
+          });
+
+          fabric.Image.fromURL('graphics/tree.png', function(oImg) {
+
+            canvas.add(oImg);
+
+            oImg.animate({    'left':100,'scaleX': 0.07, 'scaleY': 0.07},{
+              onChange: canvas.renderAll.bind(canvas),
+              duration: 500,
+              easing: fabric.util.ease.easeOutCubic,
+            });
+
+
+          });
+
+          fabric.Image.fromURL('graphics/tree.png', function(oImg) {
+
+            canvas.add(oImg);
+
+            oImg.animate({    'left':500, 'top':150,'scaleX': 0.07, 'scaleY': 0.07},{
+              onChange: canvas.renderAll.bind(canvas),
+              duration: 500,
+              easing: fabric.util.ease.easeOutCubic,
+            });
+
+
+          });
+
+          canvas.renderAll.bind(canvas);
+        }else if(year == 700000){
+            canvas.setBackgroundImage('graphics/bg5.jpg');
+            canvas.renderAll.bind(canvas);
+          calamity++;
+
+        }
+
+        if(year < 1000000){
+
+
+            whattodo = Math.random()
+            if(whattodo <= 0.35){
+            //produce offspriing
+            if(population.length < 20 && population.length != 1){
+              parent1 = getRandomInt(0,population.length);
+              parent2 = getRandomInt(0,population.length);
+
+              while(parent1 == parent2){
+                parent2 = getRandomInt(0,population.length);
+              }
+
+              randomizer = [population[parent1],population[parent2]];
+
+              temp = new Specie( randomizer[getRandomInt(0,1)].height, randomizer[getRandomInt(0,1)].covering, randomizer[getRandomInt(0,1)].feeding_type, randomizer[getRandomInt(0,1)].feet, getRandomInt(0,700),getRandomInt(100,500) );
+              temp.render();
+              canvas.renderAll.bind(canvas);
+
+              population.push(temp);
+            }
+          }else{
+            //remove specie
+            //natural calamities (hot, cold, tall trees, predator)
+
+            console.log("Calamity"+calamity);
+
+            if(calamity == 0) { //tag init
+                if(population[getRandomInt(0,population.length-1)].covering == 2){
+                  canvas.remove(population[0].specie);
+                  population.splice(0,1);
+                  canvas.renderAll.bind(canvas);
+                }
+            }
+            else if(calamity == 1) { //tag lamig
+                randomselection = getRandomInt(0,population.length-1);
+                if(population[randomselection].covering == 1 || population[randomselection].covering == 3 || population[randomselection].covering == 4){
+                  canvas.remove(population[0].specie);
+                  population.splice(0,1);
+                  canvas.renderAll.bind(canvas);
+                }
+            }
+            else if(calamity == 2){ //tall trees
+              randomselection = getRandomInt(0,population.length-1);
+              if(population[getRandomInt(0,population.length-1)].height == 1){
+                canvas.remove(population[0].specie);
+                population.splice(0,1);
+                canvas.renderAll.bind(canvas);
+              }
+            }
+            else if(calamity == 3){ //predator
+              randomselection = getRandomInt(0,population.length-1);
+              if(population[getRandomInt(0,population.length-1)].legs == 2){
+                canvas.remove(population[0].specie);
+                population.splice(0,1);
+                canvas.renderAll.bind(canvas);
+              }
+            }
+
+        }
+      }else{
+        if(population.length > 0){
+            alert("You Won!");
+        }else{
+          alert("You Lose!");
+        }
+        clearInterval(timer);
+        return;
+      }
+      }
+
+      function generateDummySpecies() {
+
+        canvas.add(text);
+
+        ht = [1,2,3];
+        cvr = [1,2,3,4];
+        ft = [1,2];
+        fe = [1,2];
+
+        allspecies = [];
+        selected = [];
+
+        for(i=1; i<=ht.length; i++){
+          for(j=1; j<=cvr.length; j++){
+            for(k=1; k<=ft.length; k++){
+              for(l=1; l<=ft.length; l++){
+                  console.log(i+""+j+""+k+""+l);
+                   temp = new Specie(i,j,k,l, getRandomInt(0,100),getRandomInt(0,400));
+                   allspecies.push(temp);
+              }
+            }
+          }
+        }
+
+
+
+        for(i=0; i<9; i++){
+            select = getRandomInt(1,allspecies.length);
+            if(selected[select] == 1){
+              i--;
+              continue;
+            }else{
+              selected[select] = 1;
+              loc = getLocation(i);
+              allspecies[select].x = loc[0];
+              allspecies[select].y = loc[1];
+
+              allspecies[select].render();
+
+              allspecies[select].specie.animate({'scaleX':0.6,'scaleY':0.6}, {
+                onChange: canvas.renderAll.bind(canvas)
+              });
+
+              choicepopulation.push(allspecies[select]);
+
+            }
+
+        }
+
+
+
+
+      }
+
+      function getLocation(index){
+        switch(index){
+          case 0:
+            return [100,100]
+          case 1:
+            return [300,100]
+          case 2:
+            return[500,100]
+          case 3:
+            return [100,225]
+            case 4:
+              return [300,225]
+            case 5:
+              return [500,225]
+            case 6:
+              return[100,350]
+            case 7:
+              return [300,350]
+            case 8:
+              return [500,350]
+
+
+          default:
+            return [100,100]
+        }
+      }
+    </script>
+<!--
+
+    <div class="configmenu">
+        <h2>Specie Characteristics</h2>
+
+        <p>Height</p>
+          <select id="height">
+            <option value="1">Short</option>
+            <option value="2">Medium</option>
+            <option value="3">Long</option>
+          </select>
+
+        <p>Covering</p>
+          <select id="covering">
+            <option value="1">Thick Fur</option>
+            <option value="2">Thin Fur</option>
+            <option value="3">Scale</option>
+            <option value="4">No Covering</option>
+          </select>
+
+        <p>Feeding Type</p>
+          <select id="feeding_type">
+            <option value="1">Without Beak</option>
+            <option value="2">With Beak</option>
+          </select>
+
+
+        <p>Feet</p>
+        <select id="feet">
+          <option value="1">Long</option>
+          <option value="2">Short</option>
+        </select>
+-->
+    <div id="darwinsays">
+
+    </div>
+    <div id="configmenu">
+        <button id="play">Play</button>
+        <button id="start">Start Game</button>
+    </div>
+
+
+  </body>
+
+
+
+</html>

@@ -1,0 +1,168 @@
+/*
+        //dummy animations
+
+        $('#height').change(function(){
+            gen_height = $('#height').val();
+
+            if(gen_height == 1){
+              dummy.rect.animate({
+                height: 50
+              }, {
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+
+                dummy.feet1.animate({
+                  top: 0
+                }, {
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+
+                  dummy.feet2.animate({
+                    top: 0
+                  }, {
+                      onChange: canvas.renderAll.bind(canvas)
+                    });
+            }else if (gen_height == 2) {
+              dummy.rect.animate({
+                height: 75
+              }, {
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+
+                dummy.feet1.animate({
+                  top: 30
+                }, {
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+
+                  dummy.feet2.animate({
+                    top: 30
+                  }, {
+                      onChange: canvas.renderAll.bind(canvas)
+                    });
+            }else if(gen_height == 3){
+              dummy.rect.animate({
+                height: 100
+              }, {
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+
+                dummy.feet1.animate({
+                  top: 60
+                }, {
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+
+                  dummy.feet2.animate({
+                    top: 60
+                  }, {
+                      onChange: canvas.renderAll.bind(canvas)
+                    });
+            }
+
+
+          });
+
+          $('#covering').change(function(){
+              gen_covering = $('#covering').val();
+
+              alert(gen_covering);
+              if(gen_covering == 1){
+                dummy.rect.animate({
+                  fill: 'red'
+                }, {
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+
+                  dummy.head.animate({
+                    fill: 'red'
+                  }, {
+                      onChange: canvas.renderAll.bind(canvas)
+                    });
+              } else   if(gen_covering == 2){
+                  dummy.rect.animate({
+                    fill: 'blue'
+                  }, {
+                      onChange: canvas.renderAll.bind(canvas)
+                    });
+
+                    dummy.head.animate({
+                      fill: 'blue'
+                    }, {
+                        onChange: canvas.renderAll.bind(canvas)
+                      });
+                } else   if(gen_covering == 3){
+                    dummy.rect.animate({
+                      fill: 'green'
+                    }, {
+                        onChange: canvas.renderAll.bind(canvas)
+                      });
+
+                      dummy.head.animate({
+                        fill: 'green'
+                      }, {
+                          onChange: canvas.renderAll.bind(canvas)
+                        });
+                  } else   if(gen_covering == 4){
+                      dummy.rect.animate({
+                        fill: 'black'
+                      }, {
+                          onChange: canvas.renderAll.bind(canvas)
+                        });
+
+                        dummy.head.animate({
+                          fill: 'black'
+                        }, {
+                            onChange: canvas.renderAll.bind(canvas)
+                          });
+                    }
+          });
+
+          $('#feeding_type').change(function(){
+            gen_feeding_type = $('#feeding_type').val();
+
+
+            if(gen_feeding_type == 1){
+                dummy.beak.animate({
+                  width: 20
+                },{
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+            }else if(gen_feeding_type == 2){
+              dummy.beak.animate({
+                width: 50
+              },{
+                onChange: canvas.renderAll.bind(canvas)
+              });
+            }
+          });
+
+          $('#feet').change(function(){
+              gen_feet = $('#feet').val();
+
+              if(gen_feet == 1){
+                  dummy.feet1.animate({
+                      height: 50
+                  },{
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+                  dummy.feet2.animate({
+                      height: 50
+                  },{
+                    onChange: canvas.renderAll.bind(canvas)
+                  });
+              }else if (gen_feet == 2) {
+                dummy.feet1.animate({
+                    height: 20
+                },{
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+                dummy.feet2.animate({
+                    height: 20
+                },{
+                  onChange: canvas.renderAll.bind(canvas)
+                });
+              }
+            });
+
+    */
