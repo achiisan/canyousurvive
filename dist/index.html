@@ -48,7 +48,40 @@
       box-shadow: 2px 2px 2px black;
       border-radius : 20px;
     }
+    .btn {
+      font-family: bungee;
+      background: rgb(72,135,249);
+      border: none;
+      padding: 10px;
+      font-size: 20pt;
+      color: white;
+      box-shadow: 2px 2px 2px black;
+      border-radius : 20px;
+    }
+    #popup {
+      background: url('graphics/bg1.jpg');
+      width: 80%;
+      position: absolute;
+      left: 10%;
+      top: 25%;
+      height: 300px;
+      z-index:  99;
+    }
 
+    #popup * {
+      text-align: center;
+      font-family: 'Indie Flower'
+    }
+
+    #overlay {
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 98;
+    }
     #darwinsays {
       position: absolute;
       top: 9px;
@@ -90,6 +123,7 @@
       calamity = -1;
       year = 0
       var timer;
+      habitat = 0;
 
       //general characteristics
       gen_height = 1;
@@ -108,6 +142,7 @@
             this.feet = feet;
             this.x = x;
             this.y = y;
+
 
             //specie specification
             this.bodywidth = 0; //height
@@ -136,17 +171,15 @@
 
                           switch(this.covering) {
                             case 1:
-                              this.fill = 'red';
+                              this.fill = 'rgba(175,89,5,1)';
                               break;
                             case 2:
-                              this.fill = 'blue';
+                              this.fill = 'rgba(185,122,87,1)';
                               break;
                             case 3:
-                              this.fill = 'green';
+                              this.fill = 'rgba(250,194,140,1)';
                               break;
-                            case 4:
-                              this.fill = 'yellow';
-                              break;
+
                           }
 
                           switch(this.feeding_type){
@@ -185,7 +218,7 @@
             this.rect = new fabric.Ellipse({
               left: 0,
               top: 0,
-              fill: 'rgba(185,122,87,1)',
+              fill: this.fill,
               originX: 'center', originY: 'center',
                rx: this.bodywidth,
               ry: this.bodyheight,
@@ -324,14 +357,16 @@
         $('#start').hide();
         $('#play').hide();
         $('#darwinsays').hide();
+        $('#popup').hide();
+        $('#overlay').hide();
 
         canvas.setBackgroundImage('graphics/bg2.jpg',function(){
             //generateDummySpecies();
-            fabric.Image.fromURL('graphics/logo.png', function(oImg) {
+            fabric.Image.fromURL('graphics/INTRO.png', function(oImg) {
 
               canvas.add(oImg);
 
-              oImg.animate({    'left':100,'top': 200,'scaleX': 0.350, 'scaleY': 0.350},{
+              oImg.animate({    'left':100,'top': 100,'scaleX': 0.50, 'scaleY': 0.50},{
                 onChange: canvas.renderAll.bind(canvas),
                 duration: 8000,
                 easing: fabric.util.ease.easeOutCubic,
@@ -370,6 +405,9 @@
 
 
             });
+            $('#restart').click(function(){
+                location.reload();
+            });
 
 
 
@@ -397,10 +435,17 @@
 
       function testSpecie() {
 
+        if(year < 60000){
         year += 10000;
+      }else{
+        year += 30000;
+      }
         console.log(year);
         if(population.length == 0){
-            alert("You Lose!");
+          $('#subh').html('Sorry :(');
+          $('#hdr').html('Your Specie did not live long enough to survive a million years.');
+          $('#overlay').show();
+          $('#popup').show(1000);
             clearInterval(timer);
             return;
         }
@@ -408,7 +453,7 @@
 
 
 
-        if (year == 50000){
+        if (year == 60000){
           calamity++;
           $('.speechbubble').html("Whew! It's quite hot right now! <br><br> Can the species survive this scorching heat? Let's see! <br><br> Hint: Species with thin covering survive. ").css('font-size','20pt');
           canvas.setBackgroundImage('graphics/bg1.jpg');
@@ -422,7 +467,7 @@
 
             oImg.animate({'scaleX': 1.2, 'scaleY': 1.2},{
               onChange: canvas.renderAll.bind(canvas),
-              duration: 25000,
+              duration: 10000,
               easing: fabric.util.ease.easeOutElastic,
               onComplete: function() { canvas.remove(oImg); }
             })
@@ -430,34 +475,35 @@
 
           });
         }
-        else if(year == 200000){
+        else if(year == 300000){
           calamity++;
 
           canvas.setBackgroundImage('graphics/bg3.jpg');
+                $('.speechbubble').html("Brrr! It's freezing! <br><br> Are the species adapted for this cold weather? Let's see! <br><br> Hint: Species with thick covering survive ").css('font-size','20pt');
           fabric.Image.fromURL('graphics/moon.png', function(oImg) {
 
             canvas.add(oImg);
 
             oImg.animate({    'left':600,'scaleX': 1.2, 'scaleY': 1.2},{
               onChange: canvas.renderAll.bind(canvas),
-              duration: 12000,
+              duration: 20000,
               easing: fabric.util.ease.easeOutElastic,
               onComplete: function() { canvas.remove(oImg); }
             });
           });
 
           canvas.renderAll.bind(canvas);
-        }else if(year == 500000){
+        }else if(year == 510000){
           calamity++;
           canvas.setBackgroundImage('graphics/bg4.jpg');
-
+          $('.speechbubble').html("It's harvest time! <br><br> But can the species eat the fruit of the tall trees? Let's see! <br><br> Hint: Species with long bodies have a higher chance of surival ").css('font-size','20pt');
           fabric.Image.fromURL('graphics/sun.png', function(oImg) {
 
             canvas.add(oImg);
 
             oImg.animate({    'left':300,'scaleX': 0.7, 'scaleY': 0.7},{
               onChange: canvas.renderAll.bind(canvas),
-              duration: 8000,
+              duration: 15000,
               easing: fabric.util.ease.easeOutElastic,
               onComplete: function() { canvas.remove(oImg); }
             });
@@ -490,7 +536,8 @@
           });
 
           canvas.renderAll.bind(canvas);
-        }else if(year == 700000){
+        }else if(year == 750000){
+          $('.speechbubble').html("Uh oh! Mayday! Mayday! A predator has been spotted! <br><br> Can the species escape the predator? Let's find out! <br><br>Hint: Long-legged species can escape predators. ").css('font-size','15pt');
             canvas.setBackgroundImage('graphics/bg5.jpg');
             canvas.renderAll.bind(canvas);
           calamity++;
@@ -526,33 +573,38 @@
             console.log("Calamity"+calamity);
 
             if(calamity == 0) { //tag init
-                if(population[getRandomInt(0,population.length-1)].covering == 2){
-                  canvas.remove(population[0].specie);
-                  population.splice(0,1);
+                random = getRandomInt(0,population.length-1)
+                console.log(population[random].covering);
+                if(population[random].covering == 1){
+                  canvas.remove(population[random].specie);
+                  population.splice(random,1);
                   canvas.renderAll.bind(canvas);
                 }
             }
             else if(calamity == 1) { //tag lamig
-                randomselection = getRandomInt(0,population.length-1);
-                if(population[randomselection].covering == 1 || population[randomselection].covering == 3 || population[randomselection].covering == 4){
-                  canvas.remove(population[0].specie);
-                  population.splice(0,1);
+              random = getRandomInt(0,population.length-1)
+              console.log(population[random].covering);
+                if(population[random].covering == 2 || population[random].covering == 3 ){
+                  canvas.remove(population[random].specie);
+                  population.splice(random,1);
                   canvas.renderAll.bind(canvas);
                 }
             }
             else if(calamity == 2){ //tall trees
-              randomselection = getRandomInt(0,population.length-1);
-              if(population[getRandomInt(0,population.length-1)].height == 1){
-                canvas.remove(population[0].specie);
-                population.splice(0,1);
+              random = getRandomInt(0,population.length-1)
+              console.log(population[random].height);
+              if(population[random].height == 1){
+                canvas.remove(population[random].specie);
+                population.splice(random,1);
                 canvas.renderAll.bind(canvas);
               }
             }
             else if(calamity == 3){ //predator
-              randomselection = getRandomInt(0,population.length-1);
-              if(population[getRandomInt(0,population.length-1)].legs == 2){
-                canvas.remove(population[0].specie);
-                population.splice(0,1);
+              random = getRandomInt(0,population.length-1)
+              console.log(population[random].legs);
+              if(population[random].feet == 2){
+                canvas.remove(population[random].specie);
+                population.splice(random,1);
                 canvas.renderAll.bind(canvas);
               }
             }
@@ -560,9 +612,13 @@
         }
       }else{
         if(population.length > 0){
-            alert("You Won!");
+          $('#overlay').show();
+          $('#popup').show(1000);
         }else{
-          alert("You Lose!");
+          $('#subh').html('Sorry :(');
+          $('#hdr').html('Your Specie did not live long enough to survive a million years.');
+          $('#overlay').show();
+          $('#popup').show(1000);
         }
         clearInterval(timer);
         return;
@@ -574,7 +630,7 @@
         canvas.add(text);
 
         ht = [1,2,3];
-        cvr = [1,2,3,4];
+        cvr = [1,2,3];
         ft = [1,2];
         fe = [1,2];
 
@@ -666,8 +722,7 @@
           <select id="covering">
             <option value="1">Thick Fur</option>
             <option value="2">Thin Fur</option>
-            <option value="3">Scale</option>
-            <option value="4">No Covering</option>
+            <option value="3">No Covering</option>
           </select>
 
         <p>Feeding Type</p>
@@ -690,6 +745,14 @@
           <img src="graphics/callout.png" style="margin-top: -40px; margin-left: -30px;"/>
           <p class="speechbubble"> Howdy! I'm Charles Darwin, the father of Evolution. Back in 1859, I set my theory of <strong>Natural Selection</strong>, where organisms that are best suited to their environment survive and pass on their genetic traits in increasing number to successive generations. Today i'm going to show to you how that works. <br> <br> The species you see on the left have different traits. They may or may not have a beak, they may be tall, or short, or they may have thick or thin fur. <br> <br> Choose 3 from the selection to begin the game. </p>
         </div>
+
+    </div>
+    <div id="overlay">d</div>
+    <div id="popup">
+      <p id="subh"><strong>Congratulations!</strong></p>
+
+      <h1 id= "hdr"> Your Specie is a survivor! It can survive a million years! <h1>
+        <button class="btn" id="restart">Restart the Game</button>
     </div>
     <div id="configmenu">
         <button id="play">Play</button>
